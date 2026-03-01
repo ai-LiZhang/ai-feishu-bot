@@ -15,8 +15,6 @@ NEWS_SOURCES = [
     "https://www.theverge.com/rss/index.xml"
 ]
 
-ARXIV_FEED = "http://export.arxiv.org/rss/cs.AI"
-
 AI_COMPANIES = [
     "OpenAI",
     "NVIDIA",
@@ -86,22 +84,6 @@ def collect_news():
     return news
 
 
-def collect_papers():
-
-    papers = []
-
-    feed = feedparser.parse(ARXIV_FEED)
-
-    for entry in feed.entries[:5]:
-
-        papers.append({
-            "title": entry.title,
-            "link": entry.link
-        })
-
-    return papers
-
-
 def score_company(name):
 
     score = random.randint(75,95)
@@ -112,7 +94,7 @@ def score_company(name):
     }
 
 
-def generate_report(news, papers, companies):
+def generate_report(news, companies):
 
     today = datetime.date.today()
 
@@ -151,19 +133,17 @@ def generate_report(news, papers, companies):
 
     report += "\n八、AI产业趋势判断\nAI进入应用爆发期\n"
 
-    report += "\n九、AI投资机会\nAI算力、AI Agent、AI机器人\n"
+    report += "\n九、AI投资机会\n"
+
+    report += "- AI算力\n"
+    report += "- AI Agent\n"
+    report += "- AI机器人\n"
 
     report += "\n十、推荐投资标的\n"
 
     for c in companies[:5]:
 
         report += f"- {c['company']} 评分 {c['score']}\n"
-
-    report += "\n\nAI论文更新\n"
-
-    for p in papers:
-
-        report += f"- {p['title']}\n"
 
     return report
 
@@ -206,21 +186,19 @@ def main():
 
     news = collect_news()
 
-    papers = collect_papers()
-
     companies = []
 
     for name in AI_COMPANIES:
 
         companies.append(score_company(name))
 
-    report = generate_report(news, papers, companies)
+    report = generate_report(news, companies)
 
-    pdf_path = generate_pdf(report)
+    generate_pdf(report)
 
     send_to_feishu(report)
 
-    print("Report generated:", pdf_path)
+    print("Report generated")
 
 
 if __name__ == "__main__":

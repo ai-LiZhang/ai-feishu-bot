@@ -26,4 +26,4 @@ jobs:
       - name: Run AI System
         env:
           FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
-        run: python ai_system.py
+        run: python ai_report.py

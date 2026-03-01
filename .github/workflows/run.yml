@@ -1,6 +1,10 @@
-name: feishu-bot
+name: AI Investment Intelligence System
 
 on:
+  schedule:
+    - cron: "0 22 * * *"
+    - cron: "0 9 * * *"
+
   workflow_dispatch:
 
 jobs:
@@ -10,13 +14,16 @@ jobs:
 
     steps:
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: "3.12"
 
-      - run: pip install requests
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-      - run: python ai_report.py
+      - name: Run AI System
+        env:
+          FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
+        run: python ai_system.py

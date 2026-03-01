@@ -1,10 +1,6 @@
-name: AI Investment Intelligence System
+name: AI Report
 
 on:
-  schedule:
-    - cron: "0 22 * * *"
-    - cron: "0 9 * * *"
-
   workflow_dispatch:
 
 jobs:
@@ -14,16 +10,22 @@ jobs:
 
     steps:
 
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: '3.10'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install requests
+          pip install feedparser
+          pip install reportlab
 
-      - name: Run AI System
+      - name: Run AI report
         env:
           FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
-        run: python ai_report.py
+        run: |
+          python ai_report.py
